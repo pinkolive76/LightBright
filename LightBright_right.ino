@@ -26,9 +26,9 @@
 #define MAXSTEPS       3 // Process (up to) this many concurrent steps
 
 // The readings from the sensors are usually around xxx when not being pressed,
-// then dip below 75 when the heel is standing on it. Depending on you weight,
+// then dip below 75 when the heel is standing on it. Depending on your weight,
 // readings may differ, so adjust as needed.
-#define STEP_TRIGGER    75 // Reading must be below this to trigger step
+#define STEP_TRIGGER    75  // Reading must be below this to trigger step
 #define STEP_HYSTERESIS 100 // After trigger, must return to this level
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(N_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
@@ -52,7 +52,7 @@ boolean
 void init_colorArray() {
   // calculate a nice rainbow of hues using sine
   double freq = .3;
-  uint8_t i, r, g, b;
+  uint8_t i;
   for(i=0; i<HALF_STRIP; i++) {
     colorArray[i][0] = sin(freq*i + 0) * 127 + 128;
     colorArray[i][1] = sin(freq*i + 2) * 127 + 128;
