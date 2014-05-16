@@ -1,4 +1,4 @@
-// 'Light Bright' LED rainbow sneakers sketch by Brigit Lyons
+// 'Light Bright' Rainbow LED sneakers sketch by Brigit Lyons
 // This is a highly modified version of the 'Firewalker' LED sneakers sketch for 
 //   Adafruit NeoPixels by Phillip Burgess
 //
