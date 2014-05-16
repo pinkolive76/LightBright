@@ -23,7 +23,7 @@
 #define MAXSTEPS       3 // Process (up to) this many concurrent steps
 
 // The readings from the sensors are usually around xxx when not being pressed,
-// then dip below 50 when the heel is standing on it. Depending on you weight,
+// then dip below 50 when the heel is standing on it. Depending on your weight,
 // readings may differ, so adjust as needed.
 #define STEP_TRIGGER    50 // Reading must be below this to trigger step
 #define STEP_HYSTERESIS 75 // After trigger, must return to this level
@@ -49,8 +49,7 @@ boolean
 void init_colorArray() {
   // calculate a nice rainbow of hues using sine
   double freq = .3;
-  uint8_t i, r, g, b;
-  for(i=0; i<HALF_STRIP; i++) {
+  for(int i=0; i<HALF_STRIP; i++) {
     colorArray[i][0] = sin(freq*i + 0) * 127 + 128;
     colorArray[i][1] = sin(freq*i + 2) * 127 + 128;
     colorArray[i][2] = sin(freq*i + 4) * 127 + 128;
