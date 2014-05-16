@@ -1,6 +1,8 @@
 // 'Light Bright' LED rainbow sneakers sketch by Brigit Lyons
 // This is a highly modified version of the 'Firewalker' LED sneakers sketch for 
 //   Adafruit NeoPixels by Phillip Burgess
+//
+// Uncomment Serial calls to help calibrate to your sensor readings, as well as easier debugging
 
 #include <Adafruit_NeoPixel.h>
 #include <math.h>
@@ -12,10 +14,10 @@
 // Brigit's shoes: 39 LEDs total, 20 LEDs along the outside, LED #7 at heel, LED #27 at toe.
 #define N_LEDS        39 // TOTAL number of LEDs in strip
 #define HALF_STRIP    20 // cieling(N_LEDS/2), only used for LED animation logic
-#define OUTSIDE_LEN   20 // Number of LEDs on the OUTSIDE of shoe (from pixels HEEL to TOE-1)
-#define INSIDE_LEN    19 // Number of LEDs on the INSIDE of shoe (from pixels HEEL to TOE-1)
 #define HEEL           7 // Index of REAR-MOST LED on shoe (remember, the first LED is #0)
 #define TOE           27 // Index of TOP-MOST LED on shoe
+#define OUTSIDE_LEN   20 // Number of LEDs on the OUTSIDE of shoe (from HEEL to TOE-1)
+#define INSIDE_LEN    19 // Number of LEDs on the INSIDE of shoe (from HEEL-1 to TOE)
 #define STEP_PIN       9 // Analog input for footstep
 #define LED_PIN        6 // LED strip is connected here
 #define MAXSTEPS       3 // Process (up to) this many concurrent steps
@@ -106,8 +108,9 @@ void colorArrayWipe(uint8_t wait) {
 }
 
 void setup() {
+  // DEBUG:
   // initialize serial communications at 9600 bps:
-  Serial.begin(9600);
+  //Serial.begin(9600);
   //Serial.println("setup");
   pinMode(9, INPUT_PULLUP); // Set internal pullup resistor for sensor pin
 
@@ -126,8 +129,9 @@ void loop() {
 
   // Read analog input, with a little noise filtering
   stepFiltered = ((stepFiltered * 3) + analogRead(STEP_PIN)) >> 2;
-  Serial.print("sensor = ");
-  Serial.println(stepFiltered);
+  // DEBUG:
+  //Serial.print("sensor = ");
+  //Serial.println(stepFiltered);
   //Serial.print("Step trigger = ");
   //Serial.println(STEP_TRIGGER);
 
@@ -136,17 +140,20 @@ void loop() {
   // and during quick foot-tapping there could be multiple step animations
   // 'in flight,' so a short list is kept.
   if(stepping) { // If a step was previously triggered...
+    // DEBUG:
     //Serial.println("A step was previously triggered");
     if(stepFiltered >= STEP_HYSTERESIS) { // Has step let up?
+      // DEBUG:
       //Serial.println("The step has let up");
       stepping = false;                   // Yep! Stop monitoring.
       // Add new step to the step list (may be multiple in flight)
-      stepMag[stepNum] = stepMin;//(STEP_HYSTERESIS - stepMin) * 6; // Step intensity
+      stepMag[stepNum] = stepMin; // Step intensity
       if(++stepNum >= MAXSTEPS) stepNum = 0; // If many, overwrite oldest
     } 
     else if(stepFiltered < stepMin) stepMin = stepFiltered; // Track min val
   } 
   else if(stepFiltered < STEP_TRIGGER) { // No step yet; watch for trigger
+    // DEBUG:
     //Serial.println("A Step!");
     stepping = true;         // Got one!
     stepMin  = stepFiltered; // Note initial value
@@ -154,11 +161,12 @@ void loop() {
   
   for(i=0; i<MAXSTEPS; i++) {     // For each step in the buffer...
     if(stepMag[i] <= 0) {
+      // DEBUG: 
       //Serial.println("No active step");
-      //wipeOff(25);
       continue; // Skip if inactive
     }
-    Serial.println("ACTIVE STEP");
+    // DEBUG:
+    //Serial.println("ACTIVE STEP");
     colorArrayWipe(25);
     wipeOff(25);
     stepMag[i] = 0;
